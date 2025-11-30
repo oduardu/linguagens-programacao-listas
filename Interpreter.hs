@@ -9,6 +9,7 @@ isValue BFalse = True
 isValue (Num _) = True 
 isValue (Lam _ _ _) = True 
 isValue (EmptyList _) = True
+isValue (ConstructorList h t) = isValue h && isValue t
 isValue _ = False 
 
 subst :: String -> Expr -> Expr -> Expr 
