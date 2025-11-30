@@ -23,6 +23,7 @@ subst x s (App t1 t2) = App (subst x s t1) (subst x s t2)
 subst x s (Add t1 t2) = Add (subst x s t1) (subst x s t2) 
 subst x s (And t1 t2) = And (subst x s t1) (subst x s t2) 
 subst x s (Or t1 t2) = Or (subst x s t1) (subst x s t2) 
+subst x s (If e1 e2 e3) = If (subst x s e1) (subst x s e2) (subst x s e3)
 -- Completar subst para outros termos da linguagem
 
 step :: Expr -> Expr 
@@ -39,7 +40,10 @@ step (Or BTrue e2) = BTrue
 step (Or BFalse e2) = e2
 step (Or e1 e2) = Or (step e1) e2
 
--- Implementar step para If
+step (If BTrue e1 e2) = e1
+step (If BFalse e1 e2) = e2
+step (If e e1 e2) = If (step e) e1 e2
+
 step (App (Lam x tp e1) e2) = if (isValue e2) then 
                                 subst x e2 e1 
                               else 
