@@ -26,6 +26,11 @@ typeof ctx (If e e1 e2) = case typeof ctx e of
                                                                | otherwise -> Nothing 
                                             _ -> Nothing  
                             _ -> Nothing 
+
+typeof ctx (Times e1 e2) = case (typeof ctx e1, typeof ctx e2) of 
+                           (Just TNum, Just TNum) -> Just TNum 
+                           _                      -> Nothing
+
 typeof ctx (Var x) = lookup x ctx 
 typeof ctx (Lam x tp b) = let ctx' = (x,tp) : ctx 
                             in case (typeof ctx' b) of 
