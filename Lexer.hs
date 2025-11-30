@@ -25,11 +25,16 @@ data Expr = Num Int
           | Var String
           | Lam String Ty Expr 
           | App Expr Expr 
+          | EmptyList Ty
+          | ConstructorList Expr Expr
+          | HeadList Expr
+          | TailList Expr
           deriving Show 
 
 data Ty = TNum 
         | TBool 
-        | TFun Ty Ty 
+        | TFun Ty Ty
+        | TList Ty 
         deriving (Show, Eq) 
 
 lexer :: String -> [Token]

@@ -36,11 +36,27 @@ typeof ctx (Lam x tp b) = let ctx' = (x,tp) : ctx
                             in case (typeof ctx' b) of 
                                  Just tr -> Just (TFun tp tr)
                                  _ -> Nothing 
+
 typeof ctx (App e1 e2) = case typeof ctx e1 of 
                            Just (TFun tp tr) -> case typeof ctx e2 of 
                                                   Just t2 | t2 == tp -> Just tr 
                                                   _ -> Nothing 
                            _ -> Nothing 
+
+ -- Checker da Lista
+typeof ctx (EmptyList t) = Just (TList t)
+
+typeof ctx (ConstructorList e1 e2) = case (typeof ctx e1, typeof ctx e2) of 
+                         (Just tHead, Just (TList tTail)) | tHead == tTail -> Just (TList tHead)
+                         _ -> Nothing 
+
+typeof ctx (HeadList e1) = case typeof ctx e1 of 
+                          Just (TList t) -> Just t
+                          _ -> Nothing
+
+typeof ctx (TailList e1) = case typeof ctx e1 of 
+                          Just (TList t) -> Just (TList t)
+                          _ -> Nothing
 
 
 typecheck :: Expr -> Expr 

@@ -8,6 +8,7 @@ isValue BTrue  = True
 isValue BFalse = True 
 isValue (Num _) = True 
 isValue (Lam _ _ _) = True 
+isValue (EmptyList _) = True
 isValue _ = False 
 
 subst :: String -> Expr -> Expr -> Expr 
@@ -25,7 +26,6 @@ subst x s (And t1 t2) = And (subst x s t1) (subst x s t2)
 subst x s (Or t1 t2) = Or (subst x s t1) (subst x s t2) 
 subst x s (Times t1 t2) = Times (subst x s t1) (subst x s t2)
 subst x s (If e1 e2 e3) = If (subst x s e1) (subst x s e2) (subst x s e3)
--- Completar subst para outros termos da linguagem
 
 step :: Expr -> Expr 
 step (Add (Num n1) (Num n2)) = Num (n1 + n2)
@@ -54,6 +54,20 @@ step (App (Lam x tp e1) e2) = if (isValue e2) then
                                 subst x e2 e1 
                               else 
                                 App (Lam x tp e1) (step e2)
+
+step (ConstructorList e1 e2) = if (isValue e1) then 
+                                 if (isValue e2) then 
+                                   ConstructorList e1 e2
+                                 else 
+                                   ConstructorList e1 (step e2)
+                               else 
+                                 ConstructorList (step e1) e2
+                                 
+step (HeadList (ConstructorList e1 e2)) = e1
+step (HeadList e1) = HeadList (step e1)
+
+step (TailList (ConstructorList e1 e2)) = e2
+step (TailList e1) = TailList (step e1)
 
 eval :: Expr -> Expr
 eval e = if isValue e then 
