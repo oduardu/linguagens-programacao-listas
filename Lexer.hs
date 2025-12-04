@@ -10,7 +10,16 @@ data Token = TokenNum Int
            | TokenAnd 
            | TokenOr 
            | TokenLParen 
-           | TokenRParen 
+           | TokenRParen
+           | TokenLBracket
+           | TokenRBracket
+           | TokenIf
+           | TokenThen
+           | TokenElse
+           | TokenList
+           | TokenListAdd
+           | TokenListHead
+           | TokenListTail
            deriving Show 
 
 data Expr = Num Int 
@@ -41,10 +50,22 @@ lexer :: String -> [Token]
 lexer [] = []
 lexer ('+':cs) = TokenPlus : lexer cs 
 lexer ('*':cs) = TokenTimes : lexer cs 
+
 lexer ('(':cs) = TokenLParen : lexer cs 
 lexer (')':cs) = TokenRParen : lexer cs
+lexer ('[':cs) = TokenLBracket : lexer cs
+lexer (']':cs) = TokenRBracket : lexer cs
+
 lexer ('&':'&':cs) = TokenAnd : lexer cs 
 lexer ('|':'|':cs) = TokenOr : lexer cs  
+lexer ('i':'f':cs) = TokenIf : lexer cs
+lexer ('t':'h':'e':'n':cs) = TokenThen : lexer cs
+lexer ('e':'l':'s':'e':cs) = TokenElse : lexer cs
+
+lexer ('.':'a':'d':'d':cs) = TokenListAdd : lexer cs
+lexer ('.':'h':'e':'a':'d':cs) = TokenListHead : lexer cs
+lexer ('.':'t':'a':'i':'l':cs) = TokenListTail : lexer cs
+
 lexer (c:cs) | isSpace c = lexer cs 
              | isDigit c = lexNum (c:cs)
              | isAlpha c = lexKw (c:cs)
@@ -54,5 +75,9 @@ lexNum cs = case span isDigit cs of
               (num, rest) -> TokenNum (read num) : lexer rest 
 
 lexKw cs = case span isAlpha cs of 
-             ("true", rest) -> TokenTrue : lexer rest 
-             ("false", rest) -> TokenFalse : lexer rest 
+                ("true", rest) -> TokenTrue : lexer rest 
+                ("false", rest) -> TokenFalse : lexer rest
+                ("if", rest)    -> TokenIf : lexer rest
+                ("then", rest)  -> TokenThen : lexer rest
+                ("else", rest)  -> TokenElse : lexer rest
+                ("list", rest) -> TokenList : lexer rest
