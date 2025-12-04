@@ -12,7 +12,6 @@ import Lexer
 %left "&&"
 %left '+' '-'
 %left '*'
-%left listAdd listHead listTail
 
 %token 
     num             { TokenNum $$ }
