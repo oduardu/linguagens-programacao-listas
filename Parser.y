@@ -1,19 +1,21 @@
 {
-module Parser where 
+module Parser where
 
-import Lexer 
+import Lexer
 }
 
-%name parser 
+%name parser
 %tokentype { Token }
 %error { parseError }
 
 %left "||"
 %left "&&"
+%left "=="
+%left "!="
 %left '+' '-'
 %left '*'
 
-%token 
+%token
     num             { TokenNum $$ }
     true            { TokenTrue }
     false           { TokenFalse }
@@ -21,6 +23,8 @@ import Lexer
     '*'             { TokenTimes }
     "&&"            { TokenAnd }
     "||"            { TokenOr }
+    "=="            { TokenEq }
+    "!="            { TokenNeq }
     '('             { TokenLParen }
     ')'             { TokenRParen }
     '['             { TokenLBracket }
@@ -33,25 +37,25 @@ import Lexer
     '.head'         { TokenListHead }
     '.tail'         { TokenListTail }
 
-%% 
+%%
 
-Exp     : num                               { Num $1 }
-        | true                              { BTrue }
-        | false                             { BFalse }
-        | Exp '+' Exp                       { Add $1 $3 }
-        | Exp '*' Exp                       { Times $1 $3 }
-        | Exp "&&" Exp                      { And $1 $3 }
-        | Exp "||" Exp                      { Or $1 $3 }
-        | '(' Exp ')'                       { Paren $2 }
+Exp     : num                           { Num $1 }
+        | true                          { BTrue }
+        | false                         { BFalse }
+        | Exp '+' Exp                   { Add $1 $3 }
+        | Exp '*' Exp                   { Times $1 $3 }
+        | Exp "&&" Exp                  { And $1 $3 }
+        | Exp "||" Exp                  { Or $1 $3 }
+        | Exp "==" Exp                  { Eq $1 $3 }
+        | Exp "!=" Exp                  { Neq $1 $3 }
+        | '(' Exp ')'                   { Paren $2 }
         | 'if' Exp 'then' Exp 'else' Exp    { If $2 $4 $6 }
-        | 'list' '[' ']'                    { EmptyList TNum}
-        | Exp '.add''(' Exp ')'             { ConstructorList $4 $1 }
-        | Exp '.head''('')'                 { HeadList $1 }
-        | Exp '.tail''('')'                 { TailList $1 }
+        | 'list' '[' ']'                { EmptyList TNum}
+        | Exp '.add''(' Exp ')'         { ConstructorList $4 $1 }
+        | Exp '.head''('')'             { HeadList $1 }
+        | Exp '.tail''('')'             { TailList $1 }
 
-{ 
-
-parseError :: [Token] -> a 
+{
+parseError :: [Token] -> a
 parseError _ = error "Syntax error!"
-
 }
