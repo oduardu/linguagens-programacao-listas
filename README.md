@@ -26,73 +26,78 @@ export PATH="$HOME/.local/bin:$PATH"
    happy Parser.y
    ```
 
-2. **Iniciar o Interpretador (GHCi):**
-   Carregue o módulo principal no interpretador interativo do Haskell.
+2. **Compilar o código-fonte (GHC):**
+   Compile o código-fonte.
 
    ```bash
-   ghci Interpreter.hs
+   ghc Main.hs
+   ```
+
+3. **Executar o Interpretador:**
+   Execute o interpretador compilado.
+
+   ```bash
+   echo "SUA_EXPRESSÃO_AQUI" | ./Main
    ```
 
 ## Exemplos de Uso
 
-Dentro do GHCi, você pode executar códigos da linguagem usando a composição das funções `eval`, `parser` e `lexer`.
-
-A sintaxe básica é:
-```haskell
-eval (parser (lexer "SEU_CODIGO_AQUI"))
-```
-
 ### 1. Aritmética Básica
-```haskell
+
+```bash
 -- Soma
-eval (parser (lexer "10 + 20"))
+echo "10+20" | ./Main
 -- Resultado: Num 30
 
 -- Multiplicação com precedência
-eval (parser (lexer "2 + 3 * 4"))
+echo "2+3*4" | ./Main
 -- Resultado: Num 14
 ```
 
 ### 2. Lógica Booleana e Condicionais
-```haskell
+
+```bash
 -- Operador OR (||)
-eval (parser (lexer "true || false"))
+echo "true || false" | ./Main
 -- Resultado: BTrue
 
 -- Condicional IF/THEN/ELSE
-eval (parser (lexer "if true then 1 else 0"))
+echo "if true then 1 else 0" | ./Main
 -- Resultado: Num 1
 ```
 
 ### 3. Manipulação de Listas
+
 A linguagem suporta listas (ex: `list[]` cria uma lista vazia).
 
-```haskell
+```bash
 -- Criar uma lista vazia
-eval (parser (lexer "list[]"))
+echo "list[]" | ./Main
 -- Resultado: EmptyList TNum
 
 -- Adicionar elementos (.add)
 -- Nota: O elemento é adicionado ao início da lista
-eval (parser (lexer "list[].add(1)"))
+echo "list[].add(1)" | ./Main
 -- Resultado: ConstructorList (Num 1) (EmptyList TNum)
 
 -- Encadeamento de adições
-eval (parser (lexer "list[].add(2).add(1)"))
+echo "list[].add(2).add(1)" | ./Main
 -- Resultado: Lista [1, 2]
 
 -- Pegar a cabeça da lista (.head())
-eval (parser (lexer "list[].add(10).head()"))
+echo "list[].add(10).head()" | ./Main
 -- Resultado: Num 10
 
 -- Pegar a cauda da lista (.tail())
-eval (parser (lexer "list[].add(20).add(10).tail()"))
+echo "list[].add(20).add(10).tail()" | ./Main
 -- Resultado: Lista contendo apenas [20]
 ```
 
 ### 4. Exemplo Complexo
+
 Misturando condicionais e listas:
 
-```haskell
-eval (parser (lexer "if true then list[].add(99) else list[]"))
+```bash
+echo "if true then list[].add(99) else list[]" | ./Main
+-- Resultado: ConstructorList (Num 99) (EmptyList TNum)
 ```
