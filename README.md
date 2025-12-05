@@ -62,7 +62,7 @@ echo "true || false" | ./Main
 -- Resultado: BTrue
 
 -- Condicional IF/THEN/ELSE
-echo "if true then 1 else 0" | ./Main
+echo "if 3+2==5 then 1 else 0" | ./Main
 -- Resultado: Num 1
 ```
 
@@ -98,6 +98,6 @@ echo "list[].add(20).add(10).tail()" | ./Main
 Misturando condicionais e listas:
 
 ```bash
-echo "if true then list[].add(99) else list[]" | ./Main
+echo "if 10+10==20 then list[].add(99) else list[]" | ./Main
 -- Resultado: ConstructorList (Num 99) (EmptyList TNum)
 ```
